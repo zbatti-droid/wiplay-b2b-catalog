@@ -1,0 +1,1 @@
+import Link from 'next/link';export default function NotFound(){return <main className="error-page"><p className="eyebrow">404</p><h1>Cette page n'existe pas.</h1><p>La ressource demandée est introuvable.</p><Link className="btn btn-primary" href="/">Retour à l'accueil</Link></main>}

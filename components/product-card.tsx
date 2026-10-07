@@ -1,0 +1,4 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import type {Product} from '@/lib/catalog';
+export default function ProductCard({product}:{product:Product}){return <article className="product-card industry-product"><Link className="product-card-image" href={`/products/${product.slug}`} aria-label={`Voir ${product.name}`}><Image src={product.image} alt={`Photo représentative de la gamme ${product.category}`} fill sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 20vw"/></Link><div className="product-card-body"><p className="product-ref">{product.category}</p><Link href={`/products/${product.slug}`}><h3>{product.name}</h3></Link><p className="product-code">Réf. {product.reference}</p><Link className="add-quote" href={`/quote?product=${encodeURIComponent(product.name+' ('+product.reference+')')}`}>Ajouter au devis <span aria-hidden>↗</span></Link></div></article>}

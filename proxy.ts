@@ -1,0 +1,4 @@
+import {NextResponse} from 'next/server';
+import type {NextRequest} from 'next/server';
+export function proxy(req:NextRequest){const path=req.nextUrl.pathname;const locale=path.startsWith('/ar/')||path==='/ar'?'ar':'fr';const headers=new Headers(req.headers);headers.set('x-wiplay-locale',locale);const protectedPath=path==='/admin'||path.startsWith('/admin/')||/^\/(fr|ar)\/admin(?:\/|$)/.test(path);const adminApi=path.startsWith('/api/admin/');if(protectedPath||adminApi){if(path==='/admin/login'||path==='/api/admin/login'||/^\/(fr|ar)\/admin\/login$/.test(path))return NextResponse.next({request:{headers}});if(!req.cookies.get('wiplay_admin')?.value){if(protectedPath)return NextResponse.redirect(new URL(`/${locale}/admin/login`,req.url));return NextResponse.json({error:'Unauthorized'},{status:401})}}return NextResponse.next({request:{headers}})}
+export const config={matcher:['/((?!_next|.*\\..*).*)']};

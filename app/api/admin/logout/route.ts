@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {sessionCookie,getAdminSession} from '@/lib/auth';import {audit} from '@/lib/audit';
+export async function POST(req:Request){const email=await getAdminSession();if(email)await audit('LOGOUT',email,req,'User',email);const r=NextResponse.json({ok:true});r.cookies.set(sessionCookie,'',{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'strict',maxAge:0,path:'/'});return r}

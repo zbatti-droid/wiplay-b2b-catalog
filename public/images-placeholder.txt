@@ -1,0 +1,1 @@
+Demo SVG assets are in public/images.
