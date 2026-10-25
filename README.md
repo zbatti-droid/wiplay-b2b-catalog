@@ -33,7 +33,7 @@ Open `http://localhost:3000`. The quote basket is stored in the browser and subm
 
 ## Admin
 
-Set `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` in `.env`. Generate a hash with `node -e "console.log(require('bcryptjs').hashSync('YourStrongPassword', 12))"`. Open `/admin/login`. Sessions are HttpOnly, signed, SameSite=Lax and expire after eight hours. In production, create an ADMIN user with a bcrypt password through the seed or a protected provisioning script.
+Set `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` and `ADMIN_SESSION_SECRET` in `.env`. Generate a hash with `node -e "console.log(require('bcryptjs').hashSync('YourStrongPassword', 12))"`. Open `/fr/admin/login` or `/ar/admin/login`. Sessions are HttpOnly, signed, SameSite=Strict, Secure in production and expire after eight hours. In production, create an ADMIN user with a bcrypt password through the seed or a protected provisioning script.
 
 ## Storage
 
@@ -48,6 +48,7 @@ Create a public Supabase Storage bucket named `catalog-media`, then set `NEXT_PU
 - Run `npm audit --omit=dev` and resolve critical/high findings before deployment.
 - Deploy over HTTPS and verify `/admin`, `/api/admin/*`, security headers, upload limits and login rate limiting.
 - The included rate limiter is per process. For multi-region/serverless deployments, replace its map with a shared Redis/Upstash limiter.
+- Keep `NEXT_PUBLIC_SITE_URL` on the canonical HTTPS origin; `/proxy.ts` preserves the correct French/Arabic document direction for localized routes.
 
 ## Security commands
 

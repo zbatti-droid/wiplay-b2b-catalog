@@ -1,3 +1,7 @@
-'use client';
-import {useState} from 'react';
-export default function Quote(){const [sent,setSent]=useState(false); const [loading,setLoading]=useState(false); async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();setLoading(true);const data=Object.fromEntries(new FormData(e.currentTarget));await fetch('/api/quotations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...data,items:[]})});setLoading(false);setSent(true)} return <main><section className="form-head"><p className="eyebrow">VOTRE PROJET</p><h1>Parlons de votre<br/><em>prochain espace.</em></h1><p>Décrivez-nous votre besoin. Notre équipe vous répond avec une proposition adaptée.</p></section>{sent?<div className="success-box"><span>✓</span><h2>Merci pour votre demande.</h2><p>Un conseiller Wiplay Pro vous contactera rapidement.</p></div>:<form className="quote-form" onSubmit={submit}><div className="form-grid"><label>Nom complet *<input required name="customerName" placeholder="Votre nom"/></label><label>Entreprise / organisme<input name="company" placeholder="Nom de votre entreprise"/></label><label>Email professionnel *<input required type="email" name="email" placeholder="vous@entreprise.com"/></label><label>Téléphone *<input required name="phone" placeholder="+212 6..."/></label></div><label>Parlez-nous de votre projet *<textarea required name="message" rows={5} placeholder="Type d'espace, ville, dimensions, délai..."></textarea></label><button className="btn btn-primary" disabled={loading}>{loading?'Envoi…':'Envoyer ma demande ↗'}</button><p className="small-note">En envoyant ce formulaire, vous acceptez que nous utilisions vos informations pour répondre à votre demande.</p></form>}</main>}
+import {redirect} from 'next/navigation';
+
+export default async function QuoteRedirect({searchParams}: {searchParams: Promise<{product?: string}>}) {
+  const {product} = await searchParams;
+  const query = product ? `?productName=${encodeURIComponent(product.slice(0, 160))}` : '';
+  redirect(`/fr/devis${query}`);
+}

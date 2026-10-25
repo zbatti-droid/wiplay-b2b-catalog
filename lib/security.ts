@@ -4,7 +4,7 @@ import {randomUUID} from 'node:crypto';
 
 const buckets = new Map<string,{count:number;reset:number}>();
 function pruneBuckets(now:number){if(buckets.size<10000)return;for(const [key,value] of buckets){if(value.reset<=now)buckets.delete(key)}}
-export function clientIp(req:Request){return (req.headers.get('x-forwarded-for')||req.headers.get('x-real-ip')||'unknown').split(',')[0].trim().slice(0,64)}
+export function clientIp(req:Request){const real=req.headers.get('x-real-ip');const forwarded=req.headers.get('x-forwarded-for');return (real||forwarded?.split(',')[0]||'unknown').trim().slice(0,64)}
 export function rateLimit(key:string,limit:number,windowMs:number){const now=Date.now();pruneBuckets(now);const current=buckets.get(key);if(!current||current.reset<=now){buckets.set(key,{count:1,reset:now+windowMs});return {ok:true,remaining:limit-1,reset:now+windowMs}}current.count++;return {ok:current.count<=limit,remaining:Math.max(0,limit-current.count),reset:current.reset}}
 export function rateResponse(reset:number){return NextResponse.json({error:'Too many requests'},{status:429,headers:{'Retry-After':String(Math.max(1,Math.ceil((reset-Date.now())/1000)))}})}
 export function assertSameOrigin(req:Request){const origin=req.headers.get('origin');if(!origin)return true;try{return new URL(origin).origin===new URL(req.url).origin}catch{return false}}
